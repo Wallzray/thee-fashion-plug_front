@@ -121,7 +121,7 @@ export default function ProductsScreen({ navigation }) {
   return (
     <View style={styles.card}>
       {/* Container for images to ensure they don't inherit card padding if needed */}
-      <View style={{ height: 200, width: IMAGE_WIDTH, overflowX: 'auto'}}>
+      <View style={{ height: 200, width: IMAGE_WIDTH, overflowX: 'hidden'}}>
         {images.length > 0 ? (
           <FlatList
             data={images}
@@ -144,7 +144,7 @@ export default function ProductsScreen({ navigation }) {
             )}
           />
         ) : (
-          <View style={{ width: IMAGE_WIDTH, height: 200, backgroundColor: "#eee", borderRadius: 10 }} />
+          <View style={{ width: CARD_WIDTH, height: 200, backgroundColor: "#eee", borderRadius: 10 }} />
         )}
       </View>
 
@@ -195,7 +195,7 @@ export default function ProductsScreen({ navigation }) {
             <Text style={styles.categoryTitle}>{category}</Text>
             <FlatList
               data={grouped[category]}
-              horizontal
+              // horizontal
               keyExtractor={(prod) => prod.id.toString()}
               renderItem={({ item }) => <ProductCard item={item} />}
               showsHorizontalScrollIndicator={false}
