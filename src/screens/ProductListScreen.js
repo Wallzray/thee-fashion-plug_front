@@ -21,9 +21,19 @@ export default function ProductsScreen({ navigation }) {
   const [selectedVariation, setSelectedVariation] = useState("");
   const [cartModalVisible, setCartModalVisible] = useState(false);
   const [filterVisible, setFilterVisible] = useState(false);
-  
-  
   const { width: screenWidth } = useWindowDimensions();
+  const [isClient, setIsClient] = useState(false);
+
+  // This only runs once the app is actually open in a browser
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // While the server is pre-rendering, show a loader or empty view
+  if (!isClient) {
+    return <ActivityIndicator size="large" style={{ marginTop: 50 }} />;
+  }
+  
   const CARD_WIDTH = screenWidth - 40;
   const IMAGE_WIDTH = CARD_WIDTH - 30;  
 
