@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useContext, useRef } from "react";
-import {View,Text,Image,FlatList,StyleSheet,TouchableOpacity,Modal,TextInput,Platform, Dimensions} from "react-native";
+import React, { useEffect, useState, useContext, } from "react";
+import {View,Text,Image,FlatList,StyleSheet,TouchableOpacity,Modal,TextInput,Platform, useWindowDimensions} from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { Ionicons } from "@expo/vector-icons";
 import { AuthContext } from "../context/AuthContext";
@@ -12,10 +12,6 @@ const getBaseUrl = () => {
 };
 const BASE_URL = getBaseUrl();
 
-const { width: screenWidth } = Dimensions.get("window");
-const CARD_WIDTH = screenWidth - 40;
-const IMAGE_WIDTH = CARD_WIDTH - 30;
-
 export default function ProductsScreen({ navigation }) {
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -27,7 +23,9 @@ export default function ProductsScreen({ navigation }) {
   const [filterVisible, setFilterVisible] = useState(false);
   
   
-  
+  const { width: screenWidth } = useWindowDimensions();
+  const CARD_WIDTH = screenWidth - 40;
+  const IMAGE_WIDTH = CARD_WIDTH - 30;  
 
   const { user } = useContext(AuthContext);
 
