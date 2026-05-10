@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext, } from "react";
-import {View,Text,Image,FlatList,StyleSheet,TouchableOpacity,Modal,TextInput,Platform, useWindowDimensions} from "react-native";
+import {View,Text,Image,FlatList,StyleSheet,TouchableOpacity,Modal,TextInput,Platform, ActivityIndicator, useWindowDimensions} from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { Ionicons } from "@expo/vector-icons";
 import { AuthContext } from "../context/AuthContext";
