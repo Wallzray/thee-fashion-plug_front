@@ -27,6 +27,23 @@ export default function ProductsScreen({ navigation }) {
   const CARD_WIDTH = screenWidth - 40;
   const IMAGE_WIDTH = CARD_WIDTH - 30;  
 
+  const styles = StyleSheet.create({
+  container: { flex: 1, padding: 15, backgroundColor: "#fff" },
+  card: { width: CARD_WIDTH, marginBottom: 20, padding: 15, borderRadius: 12, backgroundColor: "#f4f4f4" },
+  flatList: { marginBottom: 20},
+  name: { fontSize: 18, fontWeight: "bold", marginTop: 10 },
+  price: { marginBottom: 10 },
+  modalOverlay: { flex: 1, justifyContent: "center", backgroundColor: "rgba(0,0,0,0.4)" },
+  modalContainer: { flex: 1, justifyContent: "center", backgroundColor: "rgba(0,0,0,0.5)" },
+  modalContent: { backgroundColor: "#fff", margin: 20, padding: 20, borderRadius: 15 },
+  modalTitle: { fontSize: 18, fontWeight: "bold", marginBottom: 15 },
+  applyBtn: { backgroundColor: "black", padding: 10, alignItems: "center", marginTop: 10 },
+  input: { borderWidth: 1, borderColor: "#ddd", padding: 10, borderRadius: 8, marginBottom: 15 },
+  modalBox: { backgroundColor: "#fff", margin: 20, padding: 20, borderRadius: 12 },
+  picker: { borderWidth: 1, borderColor: "#ddd", padding: 10, borderRadius: 8, marginBottom: 15 },
+  emptyText: { textAlign: "center", marginTop: 40, color: "#666" },
+});
+
   const { user } = useContext(AuthContext);
 
   const fetchProducts = async () => {
@@ -296,20 +313,3 @@ export default function ProductsScreen({ navigation }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, padding: 15, backgroundColor: "#fff" },
-  card: { width: CARD_WIDTH, marginBottom: 20, padding: 15, borderRadius: 12, backgroundColor: "#f4f4f4" },
-  flatList: { marginBottom: 20},
-  name: { fontSize: 18, fontWeight: "bold", marginTop: 10 },
-  price: { marginBottom: 10 },
-  modalOverlay: { flex: 1, justifyContent: "center", backgroundColor: "rgba(0,0,0,0.4)" },
-  modalContainer: { flex: 1, justifyContent: "center", backgroundColor: "rgba(0,0,0,0.5)" },
-  modalContent: { backgroundColor: "#fff", margin: 20, padding: 20, borderRadius: 15 },
-  modalTitle: { fontSize: 18, fontWeight: "bold", marginBottom: 15 },
-  applyBtn: { backgroundColor: "black", padding: 10, alignItems: "center", marginTop: 10 },
-  input: { borderWidth: 1, borderColor: "#ddd", padding: 10, borderRadius: 8, marginBottom: 15 },
-  modalBox: { backgroundColor: "#fff", margin: 20, padding: 20, borderRadius: 12 },
-  picker: { borderWidth: 1, borderColor: "#ddd", padding: 10, borderRadius: 8, marginBottom: 15 },
-  emptyText: { textAlign: "center", marginTop: 40, color: "#666" },
-});
