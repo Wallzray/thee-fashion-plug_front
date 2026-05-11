@@ -36,19 +36,21 @@ export default function ProductsScreen({ navigation }) {
   const [loading, setLoading] = useState(true);
 
   // 2. Fetch Logic with Safety Guard
-  const fetchProducts = async () => {
+  const fetchProducts = async (category = "") => {
     try {
       setLoading(true);
-      const response = await fetch(`${BASE_URL}/products`);
+      const url = category
+        ? `${BASE_URL}/products?category=${encodeURIComponent(category)}`
+        : `${BASE_URL}/products`;
+
+      const response = await fetch(url);
       const data = await response.json();
 
       console.log("RAW DATA FROM SERVER:", data);
-      
-      // SAFETY GUARD: Ensure data is always an array
       setProducts(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Fetch products error:", error);
-      setProducts([]); // Fallback to empty array on error
+      setProducts([]);
     } finally {
       setLoading(false);
     }
@@ -201,8 +203,10 @@ export default function ProductsScreen({ navigation }) {
                     <Picker.Item label="Tshirts" value="Tshirts" />
                     <Picker.Item label="Capes" value="Capes" />
                     <Picker.Item label="Vests" value="Vests" />
+                    <Picker.Item label="Shorts" value="Shorts" />
+                    <Picker.Item label="Jackets" value="Jackets" />
                 </Picker>
-                <TouchableOpacity style={styles.applyBtn} onPress={() => { fetchProducts(); setFilterVisible(false); }}>
+                <TouchableOpacity style={styles.applyBtn} onPress={() => { fetchProducts(selectedCategory); setFilterVisible(false); }}>
                     <Text style={{ color: "white" }}>Apply</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => setFilterVisible(false)}>
@@ -237,7 +241,6 @@ export default function ProductsScreen({ navigation }) {
   );
 }
 
-// 7. Styles moved outside for stability
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 15, backgroundColor: "#fff" },
   filterBtn: { alignSelf: 'flex-end', backgroundColor: "black", padding: 10, borderRadius: 8, marginBottom: 10 },
@@ -254,7 +257,7 @@ const styles = StyleSheet.create({
   modalBox: { backgroundColor: "#fff", margin: 20, padding: 25, borderRadius: 20 },
   modalTitle: { fontSize: 20, fontWeight: "bold", marginBottom: 20 },
   input: { borderWidth: 1, borderColor: "#eee", padding: 12, borderRadius: 10, marginBottom: 15 },
-  picker: { backgroundColor: '#f0f0f0', borderRadius: 10, marginBottom: 15 },
+  picker: { backgroundColor: '#f0f0f0', borderRadius: 10, marginBottom: 15, padding: 12},
   applyBtn: { backgroundColor: "black", padding: 15, alignItems: "center", borderRadius: 10 },
   emptyText: { textAlign: "center", marginTop: 50, fontSize: 16, color: "#999" }
 });
