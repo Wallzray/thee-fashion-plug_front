@@ -5,7 +5,7 @@ export const getSessionId = async () => {
   let sessionId = await AsyncStorage.getItem("session_id");
 
   if (!sessionId) {
-    sessionId = uuidv4();
+    sessionId = `guest-${uuidv4()}`;
     await AsyncStorage.setItem("session_id", sessionId);
   }
 

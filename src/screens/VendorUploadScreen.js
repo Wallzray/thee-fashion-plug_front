@@ -46,7 +46,7 @@ export default function VendorUploadScreen({ navigation }) {
   };
 
   const getBaseUrl = () => {
-  if (Platform.OS === "web") return "https://thee-fashion-plug-back.onrender.com";
+  if (Platform.OS === "web") return "http://localhost:8000";
   if (Platform.OS === "android") return "https://thee-fashion-plug-back.onrender.com";
   return "https://thee-fashion-plug-back.onrender.com";
   };
@@ -138,6 +138,7 @@ export default function VendorUploadScreen({ navigation }) {
         <Picker.Item label="Vests" value="Vests" />
         <Picker.Item label="Shorts" value="Shorts" />
         <Picker.Item label="Jackets" value="Jackets" />
+        <Picker.Item label="Featured" value="featured" />
       </Picker>
 
       <View style={{ marginVertical: 10 }}>

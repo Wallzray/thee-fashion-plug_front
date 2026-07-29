@@ -16,6 +16,7 @@ import OrderConfirmationScreen from "./src/screens/OrderConfirmationScreen";
 import VendorUploadScreen from "./src/screens/VendorUploadScreen"; // keep for protected stacks if needed
 import AdminOrdersScreen from "./src/screens/AdminOrdersScreen";
 import CheckoutScreen from "./src/screens/CheckoutScreen";
+import PaymentWebViewScreen from "./src/screens/PaymentWebView"; 
 
 import { AuthProvider } from "./src/context/AuthContext";
 
@@ -53,6 +54,7 @@ function CartStack() {
     <Stack.Navigator>
       <Stack.Screen name="Cart" component={CartScreen} />
       <Stack.Screen name="Checkout" component={CheckoutScreen} />
+      <Stack.Screen name="PaymentWebView" component={PaymentWebViewScreen} options={{ title: "Complete Payment" }} />
       <Stack.Screen name="OrderConfirmation" component={OrderConfirmationScreen} />
     </Stack.Navigator>
   );

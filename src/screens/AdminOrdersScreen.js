@@ -22,10 +22,10 @@ export default function AdminOrdersScreen({ navigation }) {
   const renderItem = ({ item }) => (
     <View style={styles.card}>
       <Text style={styles.title}>Order #{item.id}</Text>
-      <Text>Customer: {item.full_name}</Text>
+      <Text>Customer: {item.full_name} || Client</Text>
       <Text>Phone: {item.phone}</Text>
       <Text>Status: {item.status}</Text>
-      <Text>Total: UGX {item.total_amount}</Text>
+      <Text style={styles.amount}>UGX {item?.total_amount?.toLocaleString() || "0"}</Text>
 
       <TouchableOpacity
         style={styles.btn}
@@ -39,7 +39,7 @@ export default function AdminOrdersScreen({ navigation }) {
   return (
     <FlatList
       data={orders}
-      keyExtractor={(item) => item.id.toString()}
+      keyExtractor={(item, index) => item?.id ? item.id.toString() : index.toString()}
       renderItem={renderItem}
     />
   );

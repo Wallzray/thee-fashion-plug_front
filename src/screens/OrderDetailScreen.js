@@ -111,7 +111,9 @@ export default function OrderDetailScreen({ route, navigation }) {
         data={Array.isArray(order.items) ? order.items : []}
         keyExtractor={(item, index) => (item.id ? item.id.toString() : index.toString())}
         renderItem={({ item }) => (
-          <Text>{item.name} (x{item.quantity}) - UGX {item.price}</Text>
+          <Text>{item.product_name} (x{item.quantity}) - UGX {item.price} -
+          Size: {item.size} | Variation: {item.variation}
+          </Text>
         )}
         ListEmptyComponent={<Text>No items</Text>}
       />

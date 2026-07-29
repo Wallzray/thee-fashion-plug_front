@@ -1,26 +1,26 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import React, { useContext, useEffect, useState, useMemo } from "react";
-import { 
-  ActivityIndicator, 
-  FlatList, 
-  Image, 
-  Modal, 
-  Platform, 
-  StyleSheet, 
-  Text, 
-  TextInput, 
-  TouchableOpacity, 
-  useWindowDimensions, 
-  View 
-} from "react-native";
+import { ActivityIndicator, FlatList, Image, Modal, Platform, StyleSheet, Text, TextInput, TouchableOpacity, useWindowDimensions, View } from "react-native";
 import { AuthContext } from "../context/AuthContext";
 import { apiRequest } from "../services/api";
+import { getSessionId } from "../services/session";
 
-const BASE_URL = "https://thee-fashion-plug-back.onrender.com";
+const BASE_URL = "http://localhost:8000"; // Return render link after test.
 
 export default function ProductsScreen({ navigation }) {
   const { user } = useContext(AuthContext);
+  const [sessionId, setSessionId] = useState(null);
+
+  useEffect(() => {
+    const initializeSession = async () => {
+      const id = await getSessionId();
+      setSessionId(id);
+    };
+
+    initializeSession();
+  }, []);
+
   const { width: screenWidth } = useWindowDimensions();
   
   // 1. All States
@@ -148,17 +148,25 @@ export default function ProductsScreen({ navigation }) {
 
   const addToCart = async () => {
     if (!selectedSize) return alert("Please select a size");
+    if (!sessionId) return alert("Session still loading. Please try again.");
     try {
-      const formData = new FormData();
-      formData.append("product_id", selectedProduct.id);
-      formData.append("size", selectedSize);
-      formData.append("quantity", quantity || "1");
-      formData.append("variation", selectedVariation || "Standard");
+    setLoading(true);
+    const cartPayload = {
+      product_id: Number(selectedProduct.id),
+      size: selectedSize,
+      quantity: parseInt(quantity || "1", 10),  // Default to 1 if quantity is empty or invalid
+      variation: selectedVariation || "Standard",
+      session_id: sessionId 
+    };
 
-      await apiRequest("/cart", "POST", formData);
+    await apiRequest("/cart", "POST", cartPayload);
       alert("Added to cart!");
-      setCartModalVisible(false);
-    } catch (error) { console.error(error); }
+    setCartModalVisible(false);
+  } catch (error) { 
+    console.error("Cart addition failure:", error); 
+  } finally {
+    setLoading(false);
+  }
   };
 
   // 6. Main UI
@@ -228,8 +236,30 @@ export default function ProductsScreen({ navigation }) {
                     keyboardType="numeric" 
                     style={styles.input} 
                   />
-                  <TouchableOpacity style={styles.applyBtn} onPress={addToCart}>
-                      <Text style={{ color: "white" }}>Add to Cart</Text>
+                  <Picker
+                    selectedValue={selectedSize}
+                    onValueChange={(v) => setSelectedSize(v)}
+                    style={styles.picker}
+                  >
+                    <Picker.Item label="Select Size" value="" />
+                    <Picker.Item label="Small" value="Small" />
+                    <Picker.Item label="Medium" value="Medium" />
+                    <Picker.Item label="Large" value="Large" />
+                  </Picker>
+                  <Picker
+                    selectedValue={selectedVariation}
+                    onValueChange={(v) => setSelectedVariation(v)}
+                    style={styles.picker}
+                  >
+                    <Picker.Item label="Select Variation" value="" />
+                    <Picker.Item label="Grey" value="Grey" />
+                    <Picker.Item label="White" value="White" />
+                    <Picker.Item label="Black" value="Black" />
+                    <Picker.Item label="Blue" value="Blue" />
+                    <Picker.Item label="Red" value="Red" />
+                  </Picker>
+                  <TouchableOpacity style={styles.applyBtn} onPress={() => addToCart()} disabled={loading}>
+                      <Text style={{ color: "white" }}>{loading ? "Adding..." : "Add to Cart"}</Text>
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => setCartModalVisible(false)}>
                       <Text style={{ marginTop: 15, textAlign: 'center' }}>Cancel</Text>

@@ -6,7 +6,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { apiRequest } from "../services/api";
 
 // If your backend returns full image URL in `image`, use that field
-const safeImage = (item) => item.image || item.image_url || "";
+const safeImage = (item) => item.image_url || "";
 
 export default function CartScreen({ navigation }) {
   const [cart, setCart] = useState([]);
@@ -51,6 +51,7 @@ export default function CartScreen({ navigation }) {
         <Text style={styles.name}>{item.name}</Text>
         <Text>Size: {item.size}</Text>
         <Text>Qty: {item.quantity}</Text>
+        <Text>Variation: {item.variation}</Text>
         <Text style={styles.price}>UGX {item.price}</Text>
       </View>
       <TouchableOpacity onPress={() => handleDelete(item.id)}>

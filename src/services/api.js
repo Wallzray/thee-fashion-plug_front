@@ -1,4 +1,4 @@
-import { getSessionId } from "./session";
+import { getSessionId } from "../services/session";
 import { BASE_URL } from "../config/config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -35,6 +35,7 @@ export const apiRequest = async (endpoint, method = "GET", body = null, { timeou
     ? `${BASE_URL}${endpoint.replace(/^\//, "")}`
     : `${BASE_URL}${endpoint}`;
 
+    console.log("Hitting URL:", url);
   try {
     const res = await fetch(url, options);
     clearTimeout(timeoutId);

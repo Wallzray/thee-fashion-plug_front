@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from "react";
 import {View,Text,FlatList,TextInput,Button,StyleSheet,ActivityIndicator,Alert,} from "react-native";
 import { apiRequest } from "../services/api";
+import { useNavigation } from "@react-navigation/native";
+
+// Replace with your backend endpoint that creates Pesapal orders
+
 
 export default function CheckoutScreen({ navigation }) {
+  const nav = useNavigation();
   const [cart, setCart] = useState([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -35,43 +40,99 @@ export default function CheckoutScreen({ navigation }) {
     };
   }, []);
 
-  const handleCheckout = async () => {
-    if (!fullName || !phone || !address) {
-      Alert.alert("Validation", "Please fill in all contact info");
-      return;
-    }
-
-    if (!cart || cart.length === 0) {
-      Alert.alert("Cart empty", "Your cart is empty. Add items before checking out.");
-      return;
-    }
-
-    try {
-      setSubmitting(true);
-
-      const payload = {
-        full_name: fullName,
-        phone,
-        address,
-        total_amount: total,
-      };
-
-      // apiRequest automatically attaches X-Session-ID from AsyncStorage
-      const response = await apiRequest("/checkout", "POST", payload);
-
-      const orderId = response?.order_id ?? response?.id;
-      Alert.alert("Success", `Order placed successfully! Order ID: ${orderId || "N/A"}`);
-
-      // Navigate to confirmation screen with the server response
-      navigation.replace("OrderConfirmation", { order: response });
-    } catch (error) {
-      console.log("Checkout error:", error);
-      const message = error?.data?.detail || error?.message || "Checkout failed. Try again.";
-      Alert.alert("Checkout failed", message);
-    } finally {
-      setSubmitting(false);
-    }
+  // Helper: build merchant reference (unique per order)
+  const buildMerchantReference = () => {
+    // Use timestamp + random suffix; you can replace with your own order id
+    return `ORDER-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
   };
+
+
+
+
+  // Create Pesapal order on backend and open payment page
+  const handleCheckout = async () => {
+  if (!fullName.trim() || !phone.trim() || !address.trim()) {
+    Alert.alert("Validation", "Please fill in all contact info");
+    return;
+  }
+
+  if (!cart || cart.length === 0) {
+    Alert.alert("Cart empty", "Your cart is empty. Add items before checking out.");
+    return;
+  }
+
+  try {
+    setSubmitting(true);
+
+    // CREATE ORDER FIRST (your backend requires this)
+    const checkoutResp = await apiRequest("/checkout", "POST", {
+      full_name: fullName,
+      phone,
+      address,
+      total_amount: total,
+    });
+
+    const orderId = checkoutResp?.order_id || checkoutResp?.orderId || checkoutResp?.id;
+
+    const checkoutPayload = {
+      full_name: fullName,
+      phone: phone,
+      address: address,
+      total_amount: total,
+    };
+
+    if (!orderId) {
+      Alert.alert("Error", "Order ID missing from checkout response");
+      return;
+    }
+
+    //CALL PESAPAL CREATE-ORDER WITH { order_id }
+    const pesapalResp = await apiRequest("/checkout", "POST", checkoutPayload);
+
+    const paymentUrl =
+      pesapalResp?.payment_url ||
+      pesapalResp?.checkout_url;
+
+    const targetUrl = pesapalResp.payment_url || pesapalResp.raw?.redirect_url;
+
+    const orderTrackingId =
+      pesapalResp?.orderTrackingId ||
+      pesapalResp?.order_tracking_id;
+
+    const merchant_reference =
+      pesapalResp?.merchant_reference ||
+      checkoutResp?.merchant_reference ||
+      `ORDER-${orderId}`;
+
+    if (!paymentUrl) {
+      Alert.alert("Error", "Backend did not return a payment URL");
+      return;
+    }
+    console.log("🚨 RAW BACKEND CHECKOUT RESPONSE:", JSON.stringify(pesapalResp, null, 2));
+
+    // NAVIGATE TO PAYMENT WEBVIEW
+    navigation.navigate("PaymentWebView", {
+      url: targetUrl,
+      orderId: pesapalResp.order_id,
+      paymentUrl,
+      merchant_reference,
+      orderId,
+      orderTrackingId,
+    });
+
+  } catch (error) {
+    
+    console.log("Checkout error:", error);
+    const message =
+      error?.data?.detail ||
+      error?.message ||
+      "Checkout failed. Try again.";
+    Alert.alert("Checkout failed", message);
+  } finally {
+    setSubmitting(false);
+  }
+};
+
 
   if (loading) {
     return (
@@ -137,18 +198,11 @@ export default function CheckoutScreen({ navigation }) {
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20, backgroundColor: "#fff" },
   sectionTitle: { fontSize: 20, fontWeight: "bold", marginVertical: 10 },
   item: { marginBottom: 5 },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ddd",
-    padding: 10,
-    marginBottom: 10,
-    borderRadius: 8,
-  },
+  input: {borderWidth: 1,borderColor: "#ddd",padding: 10,marginBottom: 10,borderRadius: 8,},
   total: { fontSize: 18, fontWeight: "bold", marginVertical: 10 },
   center: { flex: 1, justifyContent: "center", alignItems: "center" },
 });
