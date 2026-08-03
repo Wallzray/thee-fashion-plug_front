@@ -45,13 +45,18 @@ export default function VendorUploadScreen({ navigation }) {
   }
   };
 
-  const getBaseUrl = () => {
-  if (Platform.OS === "web") return "http://localhost:8000";
-  if (Platform.OS === "android") return "https://thee-fashion-plug-back.onrender.com";
-  return "https://thee-fashion-plug-back.onrender.com";
-  };
-  const BASE_URL = getBaseUrl();
+  // const getBaseUrl = () => {
+  // if (Platform.OS === "web") return "http://localhost:8000";
+  // if (Platform.OS === "android") return "https://thee-fashion-plug-back.onrender.com";
+  // return "https://thee-fashion-plug-back.onrender.com";
+  // };
+  // const BASE_URL = getBaseUrl();
 
+  const LOCAL_URL = "http://localhost:8000";
+  const RENDER_URL = "https://your-backend.onrender.com";
+  // Uses localhost while developing, switches to Render in production
+  const BASE_URL = __DEV__ ? LOCAL_URL : RENDER_URL;
+  
   const handleUpload = async () => {
   if (!image.length || !name || !price || !category) {
     Alert.alert("Missing fields", "Please fill all fields and pick an image");

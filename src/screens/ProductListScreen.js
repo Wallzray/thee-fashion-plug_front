@@ -6,7 +6,12 @@ import { AuthContext } from "../context/AuthContext";
 import { apiRequest } from "../services/api";
 import { getSessionId } from "../services/session";
 
-const BASE_URL = "http://localhost:8000"; // Return render link after test.
+const LOCAL_URL = "http://localhost:8000";
+const RENDER_URL = "https://your-backend.onrender.com";
+
+// Uses localhost while developing, switches to Render in production
+const BASE_URL = __DEV__ ? LOCAL_URL : RENDER_URL;
+// const BASE_URL = "http://localhost:8000"; // Return render link after test.
 
 export default function ProductsScreen({ navigation }) {
   const { user } = useContext(AuthContext);
