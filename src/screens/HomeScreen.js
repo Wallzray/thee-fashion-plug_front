@@ -13,9 +13,7 @@ export default function HomeScreen({ navigation }) {
   const [featured, setFeatured] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const BASE_URL = Platform.OS === "android" 
-  ? "https://thee-fashion-plug-back.onrender.com" 
-  : "http://localhost:8000";
+  const BASE_URL = "https://thee-fashion-plug-back.onrender.com" //  : "http://localhost:8000";
 
 const getProductImageThumbnail = (imageField) => {
   if (!imageField) return null;
