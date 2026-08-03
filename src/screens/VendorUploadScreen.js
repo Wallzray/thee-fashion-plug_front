@@ -53,9 +53,8 @@ export default function VendorUploadScreen({ navigation }) {
   // const BASE_URL = getBaseUrl();
 
   const LOCAL_URL = "http://localhost:8000";
-  const RENDER_URL = "https://thee-fashion-plug-back.onrender.com";
-  // Uses localhost while developing, switches to Render in production
-  const BASE_URL = __DEV__ ? LOCAL_URL : RENDER_URL;
+
+  const BASE_URL = "https://thee-fashion-plug-back.onrender.com";
 
   const handleUpload = async () => {
   if (!image.length || !name || !price || !category) {

@@ -1,7 +1,7 @@
 import { Platform } from "react-native";
 
 export const getBaseUrl = (path = "") => {
-  let baseUrl = "http://localhost:8000"; 
+  let baseUrl = "https://thee-fashion-plug-back.onrender.com"; 
 
   if (Platform.OS === "web") {
     baseUrl = "http://localhost:8000"; 
@@ -13,7 +13,7 @@ export const getBaseUrl = (path = "") => {
 
   // Safety block: If no valid image path exists anywhere in that record, fallback
   if (!path || typeof path !== "string") {
-    return "http://localhost:8000"; 
+    return "https://thee-fashion-plug-back.onrender.com"; 
   }
 
   if (path.startsWith("/")) {
