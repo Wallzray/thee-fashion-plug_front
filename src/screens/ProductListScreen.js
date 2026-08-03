@@ -7,7 +7,7 @@ import { apiRequest } from "../services/api";
 import { getSessionId } from "../services/session";
 
 const LOCAL_URL = "http://localhost:8000";
-const RENDER_URL = "https://your-backend.onrender.com";
+const RENDER_URL = "https://thee-fashion-plug-back.onrender.com";
 
 // Uses localhost while developing, switches to Render in production
 const BASE_URL = __DEV__ ? LOCAL_URL : RENDER_URL;
