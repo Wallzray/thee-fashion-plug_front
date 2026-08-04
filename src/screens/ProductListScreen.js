@@ -254,11 +254,12 @@ export default function ProductsScreen({ navigation }) {
                     style={styles.picker}
                   >
                     <Picker.Item label="Select Variation" value="" />
-                    <Picker.Item label="Grey" value="Grey" />
+                    <Picker.Item label="Brown" value="Brown" />
                     <Picker.Item label="White" value="White" />
                     <Picker.Item label="Black" value="Black" />
                     <Picker.Item label="Blue" value="Blue" />
                     <Picker.Item label="Red" value="Red" />
+                    <Picker.Item label="Other" value="Other"/>
                   </Picker>
                   <TouchableOpacity style={styles.applyBtn} onPress={() => addToCart()} disabled={loading}>
                       <Text style={{ color: "white" }}>{loading ? "Adding..." : "Add to Cart"}</Text>
